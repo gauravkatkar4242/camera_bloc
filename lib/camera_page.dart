@@ -1,93 +1,92 @@
+
+import 'package:bloc_1/next_page_1.dart';
 import 'package:camera/camera.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'camera_bloc.dart';
 
-class CameraPage extends StatelessWidget {
-  const CameraPage({Key? key}) : super(key: key);
+class CameraPage extends StatelessWidget with WidgetsBindingObserver {
+  CameraPage({Key? key}) : super(key: key);
 
+  // CameraController? _controller;
+
+  var cameraBloc;
+  @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   final CameraController? cameraController = _controller;
+  //
+  //   // App state changed before we got the chance to initialize.
+  //   if (cameraController == null || !cameraController.value.isInitialized) {
+  //     return;
+  //   }
+  //
+  //   if (state == AppLifecycleState.inactive) {
+  //     print("*******AppLifecycleState.inactive****************************");
+  //     cameraController.dispose();
+  //   } else if (state == AppLifecycleState.resumed) {
+  //     // BlocProvider.of<CameraBloc>(context)..add(InitializingControllerEvent());
+  //     // onNewCameraSelected(cameraController.description);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Camera Page"),
-        ),
-        body: BlocConsumer(
-            bloc: BlocProvider.of<CameraBloc>(context),
-            builder: (context, state) {
-                final controller = context.select((CameraBloc bloc) => bloc.state.cameraController);
+      appBar: AppBar(
+        title: const Text("Camera Page"),
+      ),
+      body: BlocConsumer(
+        bloc: BlocProvider.of<CameraBloc>(context)..add(GettingCamerasEvent()),
+        builder: (context, state) {
+          // _controller = context.select((CameraBloc bloc) => bloc.state.cameraController);
 
-                if (controller == null || !controller.value.isInitialized) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                else {
-                  return Stack(
+          if (state is InitializationControllerState || state is GetCameraState) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return Stack(
+              children: [
+                CameraPreview(context.select((CameraBloc bloc) => bloc.state.cameraController!)),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CameraPreview(controller),
-                      // Align(
-                      //   alignment: Alignment.bottomCenter,
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.all(8.0),
-                      //     child: ElevatedButton(
-                      //       style: ButtonStyle(
-                      //         backgroundColor: _isRecordingInProgress
-                      //             ? MaterialStateProperty.all<Color>(Colors.redAccent)
-                      //             : MaterialStateProperty.all<Color>(Colors.deepOrange),
-                      //       ),
-                      //       onPressed: () {
-                      //         _isRecordingInProgress
-                      //             ? getRecordedVideo()
-                      //             : startVideoRecording();
-                      //       },
-                      //       child: Row(
-                      //         mainAxisSize: MainAxisSize.min,
-                      //         children: [
-                      //           Text(_isRecordingInProgress
-                      //               ? "Stop Recording"
-                      //               : "Start Recording",
-                      //             style: TextStyle(fontSize: 16),),
-                      //           Icon(_isRecordingInProgress
-                      //               ? Icons.stop_circle_outlined
-                      //               : Icons.not_started_outlined,),
-                      //         ],
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-                      // _isRecordingInProgress
-                      //     ? Align(
-                      //   alignment: Alignment.topLeft,
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.only(left: 16.0, top: 16.0),
-                      //     child: Row(
-                      //       children: const [
-                      //         Icon(
-                      //           Icons.circle,
-                      //           color: Colors.red,
-                      //           size: 16,
-                      //         ),
-                      //         Text(
-                      //           " REC",
-                      //           style: TextStyle(fontSize: 16),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // )
-                      //     : Container()
+                      if (state is CameraReadyState) ...[
+                        IconButton(
+                            onPressed: () => context
+                                .read<CameraBloc>()
+                                .add(RecordingStartedEvent()),
+                            icon: const Icon(Icons.not_started_outlined))
+                      ],
+                      if (state is RecordingInProgressState) ...[
+                        IconButton(
+                            onPressed: () => context
+                                .read<CameraBloc>()
+                                .add(RecodingStoppedEvent()),
+                            icon: const Icon(Icons.stop_circle_outlined))
+                      ],
                     ],
-                  );
-                }
+                  ),
+                ),
+              ],
+            );
+          }
+        },
+        listener: (context, state) {
+          print("******************************************************$state");
+          if (state is RecordingCompletedState){
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                builder: (context) => NextPage1(),
+          ));
 
-            },
-            listener: (context, state) {
-              print("******************************************************$state");
-            }));
+        }
+        },
+      ),
+    );
   }
 }

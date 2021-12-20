@@ -1,16 +1,16 @@
 part of 'camera_bloc.dart';
 
 abstract class CameraState extends Equatable {
-  CameraState(this.cameraController);
-  CameraController? cameraController;
+  const CameraState(this.cameraController);
+  final CameraController? cameraController;
 }
 
-class CameraInitialState extends CameraState {
-  CameraInitialState(CameraController? cameraController) : super(cameraController);
-
-  @override
-  List<Object> get props => [];
-}
+// class CameraInitialState extends CameraState {
+//   CameraInitialState(CameraController? cameraController) : super(cameraController);
+//
+//   @override
+//   List<Object> get props => [];
+// }
 
 class GetCameraState extends CameraState {
   GetCameraState(CameraController? cameraController) : super(cameraController);
@@ -40,8 +40,22 @@ class ControllerInitializationFailureState extends CameraState {
   List<Object> get props => [];
 }
 
-class RecordingStoppedState extends CameraState{
-  RecordingStoppedState(CameraController? cameraController) : super(cameraController);
+class CameraReadyState extends CameraState{
+  CameraReadyState(CameraController? cameraController) : super(cameraController);
+
+  @override
+  List<Object> get props => [];
+}
+
+class RecordingInProgressState extends CameraState{
+  RecordingInProgressState(CameraController? cameraController) : super(cameraController);
+
+  @override
+  List<Object> get props => [];
+}
+
+class RecordingCompletedState extends CameraState{
+  RecordingCompletedState(CameraController? cameraController) : super(cameraController);
 
   @override
   List<Object> get props => [];

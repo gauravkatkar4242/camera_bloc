@@ -16,3 +16,18 @@ class InitializingControllerEvent extends CameraEvent{
   List<Object> get props => [];
 }
 
+class NotRecordingEvent extends CameraEvent{
+  @override
+  List<Object> get props => [];
+}
+
+class RecodingStoppedEvent extends CameraEvent{
+  @override
+  List<Object> get props => [];
+}
+
+class RecordingStartedEvent extends CameraEvent{
+  @override
+  List<Object> get props => [];
+}
+
