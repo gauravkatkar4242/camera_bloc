@@ -5,29 +5,8 @@ abstract class CameraState extends Equatable {
   final CameraController? cameraController;
 }
 
-// class CameraInitialState extends CameraState {
-//   CameraInitialState(CameraController? cameraController) : super(cameraController);
-//
-//   @override
-//   List<Object> get props => [];
-// }
-
-class GetCameraState extends CameraState {
-  GetCameraState(CameraController? cameraController) : super(cameraController);
-
-  @override
-  List<Object> get props => [];
-}
-
 class InitializationControllerState extends CameraState {
   InitializationControllerState(CameraController? cameraController) : super(cameraController);
-
-  @override
-  List<Object> get props => [];
-}
-
-class ControllerInitializationSuccessfulState extends CameraState {
-  ControllerInitializationSuccessfulState(CameraController? cameraController) : super(cameraController);
 
   @override
   List<Object> get props => [];
@@ -36,6 +15,12 @@ class ControllerInitializationSuccessfulState extends CameraState {
 class ControllerInitializationFailureState extends CameraState {
   ControllerInitializationFailureState(CameraController? cameraController) : super(cameraController);
 
+  @override
+  List<Object> get props => [];
+}
+
+class CameraExceptionState extends CameraState{
+  CameraExceptionState(CameraController? cameraController) : super(cameraController);
   @override
   List<Object> get props => [];
 }
@@ -61,3 +46,9 @@ class RecordingCompletedState extends CameraState{
   List<Object> get props => [];
 }
 
+class CameraDisposedState extends CameraState{
+  CameraDisposedState(CameraController? cameraController) : super(cameraController);
+
+  @override
+  List<Object> get props => [];
+}

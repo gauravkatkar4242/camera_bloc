@@ -7,31 +7,31 @@ part 'camera_event.dart';
 part 'camera_state.dart';
 
 class CameraBloc extends Bloc<CameraEvent, CameraState> {
-  var cameraList;
   CameraController? _controller;
 
-  CameraBloc() : super(GetCameraState(null)) {
-    on<CameraEvent>((event, emit) {
-    });
-    on<GettingCamerasEvent>(_getCameras);
-    on<InitializingControllerEvent>(_initCamera);
-    on<NotRecordingEvent>(_notRecoding);
-    on<RecordingStartedEvent>(_startedRecording);
-    on<RecodingStoppedEvent>(_getRecordedVideo);
+  @override
+  Future<void> close() {
+    // dispose
+    if (_controller != null){
+      _controller!.dispose();
+    }
+    return super.close();
   }
 
-
-  Future<void> _getCameras(GettingCamerasEvent event, Emitter<CameraState> emit) async {
-
-    print("_getCamera - STATE = $state");
-    cameraList = await availableCameras(); // gets all available cameras from device
-    emit(InitializationControllerState(_controller));
-    add(InitializingControllerEvent());
+  CameraBloc() : super(InitializationControllerState(null)) {
+    on<CameraEvent>((event, emit) {});
+    on<InitializingControllerEvent>(_initCamera);
+    on<CameraReadyEvent>(_notRecoding);
+    on<RecordingStartedEvent>(_startedRecording);
+    on<RecodingStoppedEvent>(_getRecordedVideo);
+    on<DisposeCameraEvent>(_disposeCamera);
   }
 
   Future<void> _initCamera(InitializingControllerEvent event, Emitter<CameraState> emit) async {
 
     print("_initCamera - STATE = $state");
+
+    var cameraList = await availableCameras(); // gets all available cameras from device
 
     if (_controller != null) {
       await _controller!.dispose();
@@ -58,12 +58,10 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
     } on CameraException catch (e) {
       emit(ControllerInitializationFailureState(null));
     }
-    emit(ControllerInitializationSuccessfulState(_controller));
     emit(CameraReadyState(_controller));
   }
 
-
-  void _notRecoding(NotRecordingEvent event, Emitter<CameraState> emit){
+  void _notRecoding(CameraReadyEvent event, Emitter<CameraState> emit) {
     print("_notRecoding - STATE = $state");
     emit(CameraReadyState(_controller));
   }
@@ -79,25 +77,28 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
       await _controller!.startVideoRecording();
       emit(RecordingInProgressState(_controller));
     } on CameraException catch (e) {
-    print("Error *** $e");
-    }
+      //will set state to CameraExceptionState state
+      emit(CameraExceptionState(_controller));
 
+    }
   }
 
   Future<void> _getRecordedVideo(RecodingStoppedEvent event, Emitter<CameraState> emit) async {
     XFile? file = await _stoppedRecording();
+    if (file == null){
+      emit(CameraExceptionState(_controller));
+      return;
+    }
     emit(RecordingCompletedState(_controller));
-
     if (file != null) {
       // file.saveTo("abd.mp4");
     }
-    print(file?.path ?? "nulllll **************");
     emit(CameraReadyState(_controller));
-
   }
 
   Future<XFile?> _stoppedRecording() async{
     if (_controller == null || !_controller!.value.isRecordingVideo) {
+      //will set state to CameraExceptionState state - Null video
       return null;
     }
     try {
@@ -106,8 +107,17 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
       print("_stoppedRecording - STATE = $state");
       return file;
     } on CameraException catch (e) {
-      print("Error *** $e");
+      //will set state to CameraExceptionState state
       return null;
+    }
+  }
+
+  Future<void> _disposeCamera(DisposeCameraEvent event, Emitter<CameraState> emit) async {
+    emit(CameraDisposedState(null));
+
+    if (_controller != null) {
+      await _controller?.dispose();
+      print("Camera Disposed*****-*-------------***********------------0");
     }
   }
 

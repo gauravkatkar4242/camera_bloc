@@ -1,4 +1,6 @@
-import 'package:bloc_1/camera_page.dart';
+import 'package:bloc_1/camera_screen.dart';
+import 'package:bloc_1/response_page.dart';
+import 'package:bloc_1/testing_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,7 +36,8 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: CameraPage(),
+      // home: ResponsePage(),
+        home: TestingPage(),
       ),
     );
   }

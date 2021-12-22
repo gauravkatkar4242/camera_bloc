@@ -4,19 +4,13 @@ abstract class CameraEvent extends Equatable {
   const CameraEvent();
 }
 
-class GettingCamerasEvent extends CameraEvent{
-
-  @override
-  List<Object> get props => [];
-}
-
 class InitializingControllerEvent extends CameraEvent{
 
   @override
   List<Object> get props => [];
 }
 
-class NotRecordingEvent extends CameraEvent{
+class CameraReadyEvent extends CameraEvent{
   @override
   List<Object> get props => [];
 }
@@ -31,3 +25,7 @@ class RecordingStartedEvent extends CameraEvent{
   List<Object> get props => [];
 }
 
+class DisposeCameraEvent extends CameraEvent{
+  @override
+  List<Object> get props => [];
+}
