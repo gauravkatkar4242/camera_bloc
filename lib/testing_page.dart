@@ -1,4 +1,4 @@
-import 'package:bloc_1/camera_screen.dart';
+import 'package:bloc_1/record_response/response_page_camera_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +26,7 @@ class _TestingPageState extends State<TestingPage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Container(
-            child: CameraScreen(),
+            child: ResponsePageCameraScreen(),
           ),
           FittedBox(
             child: Container(
@@ -55,7 +55,7 @@ class _TestingPageState extends State<TestingPage> {
           ),
           Container(
               height: MediaQuery.of(context).size.height * 0.7,
-              child: CameraScreen()),
+              child: ResponsePageCameraScreen()),
         ],
       ),
     );

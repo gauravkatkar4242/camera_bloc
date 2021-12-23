@@ -1,4 +1,5 @@
-import 'package:bloc_1/camera_screen.dart';
+import 'package:bloc_1/record_response/response_page_camera_screen.dart';
+import 'package:bloc_1/record_response/record_response_page.dart';
 import 'package:bloc_1/testing_page.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,7 @@ class NextPage1 extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                    builder: (context) => TestingPage(),)
+                    builder: (context) => RecordResponsePage(index: 1),)
                 );
               },
               child: Text("Next Page"),

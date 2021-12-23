@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:camera/camera.dart';
 import 'package:equatable/equatable.dart';
-part 'camera_event.dart';
-part 'camera_state.dart';
+part 'response_page_camera_event.dart';
+part 'response_page_camera_state.dart';
 
-class CameraBloc extends Bloc<CameraEvent, CameraState> {
+class ResponsePageCameraBloc extends Bloc<ResponsePageCameraEvent, ResponsePageCameraState> {
   CameraController? _controller;
 
   @override
@@ -18,8 +18,8 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
     return super.close();
   }
 
-  CameraBloc() : super(InitializationControllerState(null)) {
-    on<CameraEvent>((event, emit) {});
+  ResponsePageCameraBloc() : super(InitializationControllerState(null)) {
+    on<ResponsePageCameraEvent>((event, emit) {});
     on<InitializingControllerEvent>(_initCamera);
     on<CameraReadyEvent>(_notRecoding);
     on<RecordingStartedEvent>(_startedRecording);
@@ -27,7 +27,7 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
     on<DisposeCameraEvent>(_disposeCamera);
   }
 
-  Future<void> _initCamera(InitializingControllerEvent event, Emitter<CameraState> emit) async {
+  Future<void> _initCamera(InitializingControllerEvent event, Emitter<ResponsePageCameraState> emit) async {
 
     print("_initCamera - STATE = $state");
 
@@ -61,12 +61,12 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
     emit(CameraReadyState(_controller));
   }
 
-  void _notRecoding(CameraReadyEvent event, Emitter<CameraState> emit) {
+  void _notRecoding(CameraReadyEvent event, Emitter<ResponsePageCameraState> emit) {
     print("_notRecoding - STATE = $state");
     emit(CameraReadyState(_controller));
   }
 
-  Future<void> _startedRecording(RecordingStartedEvent event, Emitter<CameraState> emit) async {
+  Future<void> _startedRecording(RecordingStartedEvent event, Emitter<ResponsePageCameraState> emit) async {
     // _controller.startVideoRecording()
     print("_startedRecording - STATE = $state");
 
@@ -83,7 +83,7 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
     }
   }
 
-  Future<void> _getRecordedVideo(RecodingStoppedEvent event, Emitter<CameraState> emit) async {
+  Future<void> _getRecordedVideo(RecodingStoppedEvent event, Emitter<ResponsePageCameraState> emit) async {
     XFile? file = await _stoppedRecording();
     if (file == null){
       emit(CameraExceptionState(_controller));
@@ -112,7 +112,7 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
     }
   }
 
-  Future<void> _disposeCamera(DisposeCameraEvent event, Emitter<CameraState> emit) async {
+  Future<void> _disposeCamera(DisposeCameraEvent event, Emitter<ResponsePageCameraState> emit) async {
     emit(CameraDisposedState(null));
 
     if (_controller != null) {

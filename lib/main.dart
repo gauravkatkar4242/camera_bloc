@@ -1,10 +1,10 @@
-import 'package:bloc_1/camera_screen.dart';
-import 'package:bloc_1/response_page.dart';
+import 'package:bloc_1/record_response/response_page_camera_screen.dart';
+import 'package:bloc_1/record_response/record_response_page.dart';
 import 'package:bloc_1/testing_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'camera_bloc.dart';
+import 'record_response/response_page_camera_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,26 +18,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<CameraBloc>(
-          create: (BuildContext context) => CameraBloc(),
+        BlocProvider<ResponsePageCameraBloc>(
+          create: (BuildContext context) => ResponsePageCameraBloc(),
         ),
       ],
       child: MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      // home: ResponsePage(),
-        home: TestingPage(),
+      home: RecordResponsePage(index: 0),
+      //   home: TestingPage(),
       ),
     );
   }

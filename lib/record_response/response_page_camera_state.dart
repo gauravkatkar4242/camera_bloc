@@ -1,52 +1,52 @@
-part of 'camera_bloc.dart';
+part of 'response_page_camera_bloc.dart';
 
-abstract class CameraState extends Equatable {
-  const CameraState(this.cameraController);
+abstract class ResponsePageCameraState extends Equatable {
+  const ResponsePageCameraState(this.cameraController);
   final CameraController? cameraController;
 }
 
-class InitializationControllerState extends CameraState {
+class InitializationControllerState extends ResponsePageCameraState {
   InitializationControllerState(CameraController? cameraController) : super(cameraController);
 
   @override
   List<Object> get props => [];
 }
 
-class ControllerInitializationFailureState extends CameraState {
+class ControllerInitializationFailureState extends ResponsePageCameraState {
   ControllerInitializationFailureState(CameraController? cameraController) : super(cameraController);
 
   @override
   List<Object> get props => [];
 }
 
-class CameraExceptionState extends CameraState{
+class CameraExceptionState extends ResponsePageCameraState{
   CameraExceptionState(CameraController? cameraController) : super(cameraController);
   @override
   List<Object> get props => [];
 }
 
-class CameraReadyState extends CameraState{
+class CameraReadyState extends ResponsePageCameraState{
   CameraReadyState(CameraController? cameraController) : super(cameraController);
 
   @override
   List<Object> get props => [];
 }
 
-class RecordingInProgressState extends CameraState{
+class RecordingInProgressState extends ResponsePageCameraState{
   RecordingInProgressState(CameraController? cameraController) : super(cameraController);
 
   @override
   List<Object> get props => [];
 }
 
-class RecordingCompletedState extends CameraState{
+class RecordingCompletedState extends ResponsePageCameraState{
   RecordingCompletedState(CameraController? cameraController) : super(cameraController);
 
   @override
   List<Object> get props => [];
 }
 
-class CameraDisposedState extends CameraState{
+class CameraDisposedState extends ResponsePageCameraState{
   CameraDisposedState(CameraController? cameraController) : super(cameraController);
 
   @override
