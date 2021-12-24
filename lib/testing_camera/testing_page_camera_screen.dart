@@ -72,6 +72,8 @@ class _TestingPageCameraScreenState extends State<TestingPageCameraScreen>
           );
         } else {
           return LayoutBuilder(builder: (context, constraints) {
+            var timer = context
+                .select((TestingPageCameraBloc bloc) => bloc.state.timerDuration);
             return Stack(
               children: [
                 kIsWeb
@@ -105,6 +107,13 @@ class _TestingPageCameraScreenState extends State<TestingPageCameraScreen>
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          if (state is! CameraReadyState ||
+                              state is! RecordingInProgressState) ...[
+                            Container(
+                              height: 1,
+                              width: 1,
+                            )
+                          ],
                           if (state is CameraReadyState) ...[
                             ElevatedButton(
                               style: ButtonStyle(
@@ -141,7 +150,7 @@ class _TestingPageCameraScreenState extends State<TestingPageCameraScreen>
                                   elevation: MaterialStateProperty.all(5.0)),
                               onPressed: () => context
                                   .read<TestingPageCameraBloc>()
-                                  .add(RecodingStoppedEvent()),
+                                  .add(RecordingStoppedEvent()),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: const [
@@ -192,7 +201,7 @@ class _TestingPageCameraScreenState extends State<TestingPageCameraScreen>
                               decoration: const BoxDecoration(
                                 color: Colors.black26,
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(4.0)),
+                                    BorderRadius.all(Radius.circular(4.0)),
                               ),
                               padding: const EdgeInsets.symmetric(
                                   vertical: 2, horizontal: 2),
@@ -208,6 +217,23 @@ class _TestingPageCameraScreenState extends State<TestingPageCameraScreen>
                       ),
                     ),
                   ),
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: FittedBox(
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                        if (state is !RecordingInProgressState) ...[
+                          Container(
+                            height: 1,
+                            width: 1,
+                          )
+                        ],
+                        if (state is RecordingInProgressState) ...[
+                          Text(timer.toString(),style: TextStyle(fontSize: 20),)
+                        ],
+                      ])),
                 )
               ],
             );

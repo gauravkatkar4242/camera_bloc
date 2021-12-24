@@ -66,6 +66,8 @@ class _RecordResponsePageState extends State<RecordResponsePage> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return SizedBox(
+          height: constraints.maxHeight,
+          width: constraints.maxWidth,
           child: Column(
             children: [
               Container(

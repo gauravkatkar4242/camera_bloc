@@ -13,7 +13,6 @@ class ResponsePageCameraBloc
   CameraController? _controller;
 
   final CountDownTimer _ticker = const CountDownTimer();
-  static const int _duration = 10;
 
   StreamSubscription<int>? _tickerSubscription;
 

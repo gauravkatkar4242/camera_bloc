@@ -15,7 +15,26 @@ class CameraReadyEvent extends TestingPageCameraEvent{
   List<Object> get props => [];
 }
 
-class RecodingStoppedEvent extends TestingPageCameraEvent{
+
+class TimerStartedEvent extends TestingPageCameraEvent {
+  const TimerStartedEvent({required this.duration});
+
+  final int duration;
+
+  @override
+  List<Object> get props => [];
+}
+
+class TimerTickedEvent extends TestingPageCameraEvent {
+  const TimerTickedEvent({required this.duration});
+
+  final int duration;
+
+  @override
+  List<Object> get props => [];
+}
+
+class RecordingStoppedEvent extends TestingPageCameraEvent{
   @override
   List<Object> get props => [];
 }

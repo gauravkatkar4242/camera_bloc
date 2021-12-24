@@ -39,7 +39,6 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
       builder: (context, state) {
         var timer = context
             .select((ResponsePageCameraBloc bloc) => bloc.state.timerDuration);
-
         if (state is InitializationControllerState) {
           return const Center(
             child: CircularProgressIndicator(),
@@ -80,18 +79,18 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
                         aspectRatio:
                             (constraints.maxWidth / constraints.maxHeight),
                         child:
-                            CameraPreview(cameraBloc.state.cameraController!))
+                            // Expanded(child: CameraPreview(cameraBloc.state.cameraController!))
+                        CameraPreview(cameraBloc.state.cameraController!)
+                )
 
                     /* for camera screen mobile Button 👇*/
                     : Transform.scale(
                         scale: 1 /
-                            (cameraBloc
-                                    .state.cameraController!.value.aspectRatio *
+                            (cameraBloc.state.cameraController!.value.aspectRatio *
                                 (constraints.maxWidth / constraints.maxHeight)),
                         alignment: Alignment.topCenter,
-                        child: Expanded(
-                            child: CameraPreview(
-                                cameraBloc.state.cameraController!)),
+                        child: CameraPreview(
+                                cameraBloc.state.cameraController!),
                       ),
 
                 /* for Start & Stop recording Button 👇*/

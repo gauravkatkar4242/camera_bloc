@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:bloc_1/record_response/timer.dart';
 import 'package:camera/camera.dart';
 import 'package:equatable/equatable.dart';
 part 'testing_page_camera_event.dart';
@@ -9,11 +10,17 @@ part 'testing_page_camera_state.dart';
 class TestingPageCameraBloc extends Bloc<TestingPageCameraEvent, TestingPageCameraState> {
   CameraController? _controller;
 
+  final CountDownTimer _ticker = const CountDownTimer();
+
+  StreamSubscription<int>? _tickerSubscription;
+
   @override
   Future<void> close() {
     if (_controller != null){
       _controller!.dispose();
     }
+    _tickerSubscription?.cancel();
+
     return super.close();
   }
 
@@ -21,8 +28,10 @@ class TestingPageCameraBloc extends Bloc<TestingPageCameraEvent, TestingPageCame
     on<TestingPageCameraEvent>((event, emit) {});
     on<InitializingControllerEvent>(_initCamera);
     on<CameraReadyEvent>(_notRecoding);
+    on<TimerStartedEvent>(_onTimerStarted);
+    on<TimerTickedEvent>(_onTicked);
     on<RecordingStartedEvent>(_startedRecording);
-    on<RecodingStoppedEvent>(_getRecordedVideo);
+    on<RecordingStoppedEvent>(_getRecordedVideo);
     on<DisposeCameraEvent>(_disposeCamera);
   }
 
@@ -74,7 +83,8 @@ class TestingPageCameraBloc extends Bloc<TestingPageCameraEvent, TestingPageCame
     }
     try {
       await _controller!.startVideoRecording();
-      emit(RecordingInProgressState(_controller));
+      add(const TimerStartedEvent(duration: 0));
+      // emit(RecordingInProgressState(_controller, 0));
     } on CameraException catch (e) {
       //will set state to CameraExceptionState state
       emit(CameraExceptionState(_controller));
@@ -82,7 +92,27 @@ class TestingPageCameraBloc extends Bloc<TestingPageCameraEvent, TestingPageCame
     }
   }
 
-  Future<void> _getRecordedVideo(RecodingStoppedEvent event, Emitter<TestingPageCameraState> emit) async {
+  void _onTimerStarted(
+      TimerStartedEvent event, Emitter<TestingPageCameraState> emit) {
+    emit(RecordingInProgressState(_controller, event.duration));
+    _tickerSubscription?.cancel();
+    _tickerSubscription = _ticker
+        .tick(ticks: event.duration)
+        .listen((duration) => add(TimerTickedEvent(duration: duration)));
+  }
+
+  void _onTicked(
+      TimerTickedEvent event, Emitter<TestingPageCameraState> emit) {
+    print("_onTicked ${event.duration}");
+     if (event.duration > 10) {
+      add(RecordingStoppedEvent());
+    } else {
+      emit(RecordingInProgressState(_controller, event.duration));
+    }
+
+  }
+
+  Future<void> _getRecordedVideo(RecordingStoppedEvent event, Emitter<TestingPageCameraState> emit) async {
     XFile? file = await _stoppedRecording();
     if (file == null){
       emit(CameraExceptionState(_controller));
@@ -118,6 +148,7 @@ class TestingPageCameraBloc extends Bloc<TestingPageCameraEvent, TestingPageCame
       await _controller?.dispose();
       print("Camera Disposed*****-*-------------***********------------0");
     }
+    _tickerSubscription?.cancel();
   }
 
 }

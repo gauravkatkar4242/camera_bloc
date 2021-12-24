@@ -1,8 +1,11 @@
 part of 'testing_page_camera_bloc.dart';
 
 abstract class TestingPageCameraState extends Equatable {
-  const TestingPageCameraState(this.cameraController);
+  const TestingPageCameraState(this.cameraController,
+      {this.timerDuration = 0});
+
   final CameraController? cameraController;
+  final int timerDuration;
 }
 
 class InitializationControllerState extends TestingPageCameraState {
@@ -32,11 +35,30 @@ class CameraReadyState extends TestingPageCameraState{
   List<Object> get props => [];
 }
 
-class RecordingInProgressState extends TestingPageCameraState{
-  RecordingInProgressState(CameraController? cameraController) : super(cameraController);
+
+class TimerInitialState extends TestingPageCameraState {
+  const TimerInitialState(CameraController? _controller, int duration)
+      : super(_controller, timerDuration: duration);
 
   @override
   List<Object> get props => [];
+}
+
+class TimerRunInProgressState extends TestingPageCameraState {
+  TimerRunInProgressState(CameraController? _controller, int duration)
+      : super(_controller, timerDuration: duration);
+
+  @override
+  List<Object> get props => [timerDuration];
+}
+
+
+class RecordingInProgressState extends TestingPageCameraState{
+  RecordingInProgressState(CameraController? _controller, int duration)
+      : super(_controller, timerDuration: duration);
+
+  @override
+  List<Object> get props => [timerDuration];
 }
 
 class RecordingCompletedState extends TestingPageCameraState{
