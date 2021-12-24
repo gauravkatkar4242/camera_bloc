@@ -1,44 +1,32 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:bloc_1/record_response/timer.dart';
 import 'package:camera/camera.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
-part 'response_page_camera_event.dart';
-part 'response_page_camera_state.dart';
+part 'testing_page_camera_event.dart';
+part 'testing_page_camera_state.dart';
 
-class ResponsePageCameraBloc extends Bloc<ResponsePageCameraEvent, ResponsePageCameraState> {
+class TestingPageCameraBloc extends Bloc<TestingPageCameraEvent, TestingPageCameraState> {
   CameraController? _controller;
-
-  final CountDownTimer _ticker = const CountDownTimer();
-  static const int _duration = 10;
-
-  StreamSubscription<int>? _tickerSubscription;
-
 
   @override
   Future<void> close() {
-    // dispose
     if (_controller != null){
       _controller!.dispose();
     }
-    _tickerSubscription?.cancel();
     return super.close();
   }
 
-  ResponsePageCameraBloc() : super(InitializationControllerState(null)) {
-    on<ResponsePageCameraEvent>((event, emit) {});
+  TestingPageCameraBloc() : super(InitializationControllerState(null)) {
+    on<TestingPageCameraEvent>((event, emit) {});
     on<InitializingControllerEvent>(_initCamera);
     on<CameraReadyEvent>(_notRecoding);
-    on<TimerStartedEvent>(_onTimerStarted);
-    on<TimerTickedEvent>(_onTicked);
     on<RecordingStartedEvent>(_startedRecording);
     on<RecodingStoppedEvent>(_getRecordedVideo);
     on<DisposeCameraEvent>(_disposeCamera);
   }
 
-  Future<void> _initCamera(InitializingControllerEvent event, Emitter<ResponsePageCameraState> emit) async {
+  Future<void> _initCamera(InitializingControllerEvent event, Emitter<TestingPageCameraState> emit) async {
 
     print("_initCamera - STATE = $state");
 
@@ -70,36 +58,14 @@ class ResponsePageCameraBloc extends Bloc<ResponsePageCameraEvent, ResponsePageC
       emit(ControllerInitializationFailureState(null));
     }
     emit(CameraReadyState(_controller));
-    add(const TimerStartedEvent(duration: 3));
   }
 
-  void _notRecoding(CameraReadyEvent event, Emitter<ResponsePageCameraState> emit) {
+  void _notRecoding(CameraReadyEvent event, Emitter<TestingPageCameraState> emit) {
     print("_notRecoding - STATE = $state");
     emit(CameraReadyState(_controller));
   }
 
-  void _onTimerStarted(TimerStartedEvent event, Emitter<ResponsePageCameraState> emit) {
-    emit(TimerRunInProgressState(_controller ,event.duration));
-    _tickerSubscription?.cancel();
-    _tickerSubscription = _ticker
-        .tick(ticks: event.duration)
-        .listen((duration) => add(TimerTickedEvent(duration: duration)));
-  }
-
-  void _onTicked(TimerTickedEvent event, Emitter<ResponsePageCameraState> emit) {
-    print("_onTicked ${event.duration}");
-
-    if (event.duration > 0) {
-      // emit(CameraReadyState(_controller));
-      emit(TimerRunInProgressState(_controller, event.duration));
-    }
-    else{
-      add(RecordingStartedEvent());
-      // emit(RecordingInProgressState(_controller));
-  }
-  }
-
-  Future<void> _startedRecording(RecordingStartedEvent event, Emitter<ResponsePageCameraState> emit) async {
+  Future<void> _startedRecording(RecordingStartedEvent event, Emitter<TestingPageCameraState> emit) async {
     // _controller.startVideoRecording()
     print("_startedRecording - STATE = $state");
 
@@ -116,7 +82,7 @@ class ResponsePageCameraBloc extends Bloc<ResponsePageCameraEvent, ResponsePageC
     }
   }
 
-  Future<void> _getRecordedVideo(RecodingStoppedEvent event, Emitter<ResponsePageCameraState> emit) async {
+  Future<void> _getRecordedVideo(RecodingStoppedEvent event, Emitter<TestingPageCameraState> emit) async {
     XFile? file = await _stoppedRecording();
     if (file == null){
       emit(CameraExceptionState(_controller));
@@ -145,14 +111,13 @@ class ResponsePageCameraBloc extends Bloc<ResponsePageCameraEvent, ResponsePageC
     }
   }
 
-  Future<void> _disposeCamera(DisposeCameraEvent event, Emitter<ResponsePageCameraState> emit) async {
+  Future<void> _disposeCamera(DisposeCameraEvent event, Emitter<TestingPageCameraState> emit) async {
     emit(CameraDisposedState(null));
 
     if (_controller != null) {
       await _controller?.dispose();
       print("Camera Disposed*****-*-------------***********------------0");
     }
-    _tickerSubscription?.cancel();
   }
 
 }

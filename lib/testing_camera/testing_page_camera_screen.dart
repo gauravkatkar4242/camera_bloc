@@ -4,24 +4,24 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'response_page_camera_bloc.dart';
+import 'testing_page_camera_bloc.dart';
 
-class ResponsePageCameraScreen extends StatefulWidget
+class TestingPageCameraScreen extends StatefulWidget
     with WidgetsBindingObserver {
-  ResponsePageCameraScreen({Key? key}) : super(key: key);
+  TestingPageCameraScreen({Key? key}) : super(key: key);
 
   @override
-  State<ResponsePageCameraScreen> createState() =>
-      _ResponsePageCameraScreenState();
+  State<TestingPageCameraScreen> createState() =>
+      _TestingPageCameraScreenState();
 }
 
-class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
+class _TestingPageCameraScreenState extends State<TestingPageCameraScreen>
     with WidgetsBindingObserver {
   var cameraBloc;
 
   @override
   void didChangeDependencies() {
-    cameraBloc = BlocProvider.of<ResponsePageCameraBloc>(context)
+    cameraBloc = BlocProvider.of<TestingPageCameraBloc>(context)
       ..add(InitializingControllerEvent());
     WidgetsBinding.instance!.addObserver(this);
     super.didChangeDependencies();
@@ -30,17 +30,17 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
   @override
   void dispose() {
     WidgetsBinding.instance!.removeObserver(this);
+    // context.read<TestingPageCameraBloc>().add(DisposeCameraEvent());
+    print("disposed called======================");
     super.dispose();
   }
 
   // @override
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ResponsePageCameraBloc, ResponsePageCameraState>(
+    return BlocConsumer<TestingPageCameraBloc, TestingPageCameraState>(
       builder: (context, state) {
-        var timer = context
-            .select((ResponsePageCameraBloc bloc) => bloc.state.timerDuration);
-
+        // _controller = context.select((CameraBloc bloc) => bloc.state.cameraController);
         if (state is InitializationControllerState) {
           return const Center(
             child: CircularProgressIndicator(),
@@ -63,7 +63,7 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
                   const Text("Press Button to ReRecord"),
                   IconButton(
                       onPressed: () => context
-                          .read<ResponsePageCameraBloc>()
+                          .read<TestingPageCameraBloc>()
                           .add(InitializingControllerEvent()),
                       icon: const Icon(Icons.reset_tv_rounded))
                 ],
@@ -73,7 +73,6 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
         } else {
           return LayoutBuilder(builder: (context, constraints) {
             return Stack(
-              // alignment: Alignment.center,
               children: [
                 kIsWeb
                     /* for camera screen web Button 👇*/
@@ -92,9 +91,7 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
                         alignment: Alignment.topCenter,
                         child: Column(
                           children: [
-                            Expanded(
-                                child: CameraPreview(
-                                    cameraBloc.state.cameraController!)),
+                            CameraPreview(cameraBloc.state.cameraController!),
                           ],
                         ),
                       ),
@@ -108,51 +105,65 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          if (state is! RecordingInProgressState) ...[
-                            Container(
-                              height: 1,
-                              width: 1,
+                          if (state is CameraReadyState) ...[
+                            ElevatedButton(
+                              style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.deepOrangeAccent),
+                                  elevation: MaterialStateProperty.all(5.0)),
+                              onPressed: () => context
+                                  .read<TestingPageCameraBloc>()
+                                  .add(RecordingStartedEvent()),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Text(
+                                    "Start Recording",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Icon(Icons.not_started_outlined)
+                                ],
+                              ),
                             ),
                           ],
                           if (state is RecordingInProgressState) ...[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElevatedButton(
-                                  style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                              Colors.red),
-                                      elevation:
-                                          MaterialStateProperty.all(5.0)),
-                                  onPressed: () => context
-                                      .read<ResponsePageCameraBloc>()
-                                      .add(RecodingStoppedEvent()),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
-                                      Text(
-                                        "Stop Recoding",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Icon(Icons.stop_circle_outlined)
-                                    ],
+                            ElevatedButton(
+                              style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.red),
+                                  elevation: MaterialStateProperty.all(5.0)),
+                              onPressed: () => context
+                                  .read<TestingPageCameraBloc>()
+                                  .add(RecodingStoppedEvent()),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Text(
+                                    "Stop Recoding",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Icon(Icons.stop_circle_outlined)
+                                ],
+                              ),
                             ),
-                          ]
+                          ],
                         ],
                       ),
                     ),
                   ),
                 ),
-
                 /* for recording inProgress Icon 👇 */
                 Align(
                   alignment: Alignment.topLeft,
@@ -181,7 +192,7 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
                               decoration: const BoxDecoration(
                                 color: Colors.black26,
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(4.0)),
+                                BorderRadius.all(Radius.circular(4.0)),
                               ),
                               padding: const EdgeInsets.symmetric(
                                   vertical: 2, horizontal: 2),
@@ -197,22 +208,6 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
                       ),
                     ),
                   ),
-                ),
-
-                /* for Timer before Starting Rec👇 */
-                Align(
-                  alignment: Alignment.center,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      if (state is TimerRunInProgressState) ...[
-                        Text(
-                          timer.toString(),
-                          style: TextStyle(fontSize: 50),
-                        ),
-                      ]
-                    ],
-                  ),
                 )
               ],
             );
@@ -221,15 +216,17 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
       },
       listener: (context, state) {
         print("******************************************************$state");
-        if (state is RecordingCompletedState) {
+        if (state is RecordingCompletedState /* && kIsWeb */) {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) => const NextPage1(),
               ));
-          context.read<ResponsePageCameraBloc>().add(DisposeCameraEvent());
+          context.read<TestingPageCameraBloc>().add(DisposeCameraEvent());
           // b1.close();
         }
+        // else if(state is RecordingCompletedState){
+        // }
       },
     );
   }
@@ -237,13 +234,18 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.inactive) {
-      context.read<ResponsePageCameraBloc>().add(DisposeCameraEvent());
+      context.read<TestingPageCameraBloc>().add(DisposeCameraEvent());
       // Free up memory when camera not active
       print("------------------AppLifecycleState.inactive--------------------");
     } else if (state == AppLifecycleState.resumed) {
       // Reinitialize the camera with same properties
       print("------------------AppLifecycleState.resumed--------------------");
-      context.read<ResponsePageCameraBloc>().add(InitializingControllerEvent());
+      context.read<TestingPageCameraBloc>().add(InitializingControllerEvent());
     }
+    // else if (state == AppLifecycleState.paused) {
+    //   // Reinitialize the camera with same properties
+    //   print("------------------AppLifecycleState.paused--------------------");
+    //   context.read<TestingPageCameraBloc>().add(InitializingControllerEvent());
+    // }
   }
 }

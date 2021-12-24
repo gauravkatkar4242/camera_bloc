@@ -66,8 +66,6 @@ class _RecordResponsePageState extends State<RecordResponsePage> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return SizedBox(
-          height:constraints.maxHeight,
-          width: constraints.maxWidth,
           child: Column(
             children: [
               Container(
@@ -82,13 +80,13 @@ class _RecordResponsePageState extends State<RecordResponsePage> {
   }
 
   Widget _web() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20.0),
-      child: Align(
-        alignment: Alignment.topCenter,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return Container(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 // border: Border.all(color: Colors.black45)
@@ -106,10 +104,10 @@ class _RecordResponsePageState extends State<RecordResponsePage> {
                       child: _questionPart()),
                 ],
               ),
-            );
-          }
-        ),
-      ),
+            ),
+          ),
+        );
+      }
     );
   }
 
@@ -151,21 +149,23 @@ class _RecordResponsePageState extends State<RecordResponsePage> {
                         style: const TextStyle(
                             color: Colors.black45, fontSize: 16),
                       ),
-                      InkWell(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Text(
-                              flag ? "show more" : "show less",
-                              style: const TextStyle(color: Colors.blue),
-                            ),
-                          ],
+                      FittedBox(
+                        child: InkWell(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              Text(
+                                flag ? "show more" : "show less",
+                                style: const TextStyle(color: Colors.blue),
+                              ),
+                            ],
+                          ),
+                          onTap: () {
+                            setState(() {
+                              flag = !flag;
+                            });
+                          },
                         ),
-                        onTap: () {
-                          setState(() {
-                            flag = !flag;
-                          });
-                        },
                       ),
                     ],
                   )

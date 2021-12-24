@@ -1,10 +1,12 @@
-import 'package:bloc_1/record_response/response_page_camera_screen.dart';
+
+import 'package:bloc_1/next_page_1.dart';
 import 'package:bloc_1/record_response/record_response_page.dart';
-import 'package:bloc_1/testing_page.dart';
+import 'package:bloc_1/record_response/response_page_camera_bloc.dart';
+import 'package:bloc_1/testing_camera/testing_page.dart';
+import 'package:bloc_1/testing_camera/testing_page_camera_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'record_response/response_page_camera_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,14 +23,17 @@ class MyApp extends StatelessWidget {
         BlocProvider<ResponsePageCameraBloc>(
           create: (BuildContext context) => ResponsePageCameraBloc(),
         ),
+        BlocProvider<TestingPageCameraBloc>(
+          create: (BuildContext context) => TestingPageCameraBloc(),
+        ),
       ],
       child: MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: RecordResponsePage(index: 0),
-      //   home: TestingPage(),
+      // home: const RecordResponsePage(index: 1),
+        home: TestingPage(),
       ),
     );
   }
