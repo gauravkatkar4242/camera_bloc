@@ -57,11 +57,11 @@ class TimerRunInProgressState extends ResponsePageCameraState {
 }
 
 class RecordingInProgressState extends ResponsePageCameraState {
-  RecordingInProgressState(CameraController? cameraController)
-      : super(cameraController);
+  RecordingInProgressState(CameraController? _controller, int duration)
+      : super(_controller, timerDuration: duration);
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [timerDuration];
 }
 
 class RecordingCompletedState extends ResponsePageCameraState {

@@ -32,8 +32,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      // home: const RecordResponsePage(index: 1),
-        home: TestingPage(),
+      home: const RecordResponsePage(index: 1),
+        // home: TestingPage(),
       ),
     );
   }

@@ -3,7 +3,6 @@ import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'response_page_camera_bloc.dart';
 
 class ResponsePageCameraScreen extends StatefulWidget
@@ -90,13 +89,9 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
                                     .state.cameraController!.value.aspectRatio *
                                 (constraints.maxWidth / constraints.maxHeight)),
                         alignment: Alignment.topCenter,
-                        child: Column(
-                          children: [
-                            Expanded(
-                                child: CameraPreview(
-                                    cameraBloc.state.cameraController!)),
-                          ],
-                        ),
+                        child: Expanded(
+                            child: CameraPreview(
+                                cameraBloc.state.cameraController!)),
                       ),
 
                 /* for Start & Stop recording Button 👇*/
@@ -127,7 +122,7 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
                                           MaterialStateProperty.all(5.0)),
                                   onPressed: () => context
                                       .read<ResponsePageCameraBloc>()
-                                      .add(RecodingStoppedEvent()),
+                                      .add(RecordingStoppedEvent()),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: const [
@@ -207,6 +202,20 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
                     children: [
                       if (state is TimerRunInProgressState) ...[
                         Text(
+                          timer.abs().toString(),
+                          style: TextStyle(fontSize: 50),
+                        ),
+                      ]
+                    ],
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      if (state is RecordingInProgressState) ...[
+                        Text(
                           timer.toString(),
                           style: TextStyle(fontSize: 50),
                         ),
@@ -220,7 +229,7 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
         }
       },
       listener: (context, state) {
-        print("******************************************************$state");
+        print("--$state");
         if (state is RecordingCompletedState) {
           Navigator.pushReplacement(
               context,
