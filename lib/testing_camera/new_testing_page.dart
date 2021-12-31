@@ -11,7 +11,8 @@ class NewTestingPage extends StatefulWidget {
   _NewTestingPageState createState() => _NewTestingPageState();
 }
 
-class _NewTestingPageState extends State<NewTestingPage> with WidgetsBindingObserver {
+class _NewTestingPageState extends State<NewTestingPage>
+    with WidgetsBindingObserver {
   var cameraBloc;
 
   @override
@@ -29,11 +30,12 @@ class _NewTestingPageState extends State<NewTestingPage> with WidgetsBindingObse
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Testing Page"),),
+        appBar: AppBar(
+          title: Text("Testing Page"),
+        ),
         body: kIsWeb ? _web() : _mobile());
   }
 
@@ -50,7 +52,7 @@ class _NewTestingPageState extends State<NewTestingPage> with WidgetsBindingObse
             children: [
               SizedBox(
                 height: maxHeight * 0.7,
-                width:  maxWidth * 0.6,
+                width: maxWidth * 0.6,
                 child: TestingPageCameraScreen(),
               ),
               FittedBox(
@@ -74,7 +76,8 @@ class _NewTestingPageState extends State<NewTestingPage> with WidgetsBindingObse
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 20),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 20),
                     height: 300,
                     width: 280,
                     child: TestingPageCameraScreen(),

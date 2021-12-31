@@ -4,17 +4,15 @@ abstract class TestingPageCameraEvent extends Equatable {
   const TestingPageCameraEvent();
 }
 
-class InitializingControllerEvent extends TestingPageCameraEvent{
-
+class InitializingControllerEvent extends TestingPageCameraEvent {
   @override
   List<Object> get props => [];
 }
 
-class CameraReadyEvent extends TestingPageCameraEvent{
+class CameraReadyEvent extends TestingPageCameraEvent {
   @override
   List<Object> get props => [];
 }
-
 
 class TimerStartedEvent extends TestingPageCameraEvent {
   const TimerStartedEvent({required this.duration});
@@ -34,17 +32,17 @@ class TimerTickedEvent extends TestingPageCameraEvent {
   List<Object> get props => [];
 }
 
-class RecordingStoppedEvent extends TestingPageCameraEvent{
+class RecordingStoppedEvent extends TestingPageCameraEvent {
   @override
   List<Object> get props => [];
 }
 
-class RecordingStartedEvent extends TestingPageCameraEvent{
+class RecordingStartedEvent extends TestingPageCameraEvent {
   @override
   List<Object> get props => [];
 }
 
-class DisposeCameraEvent extends TestingPageCameraEvent{
+class DisposeCameraEvent extends TestingPageCameraEvent {
   @override
   List<Object> get props => [];
 }

@@ -73,7 +73,8 @@ class _TestingPageCameraScreenState extends State<TestingPageCameraScreen> {
                     /* for camera screen mobile Button 👇*/
                     : Transform.scale(
                         scale: 1 /
-                            (cameraBloc.state.cameraController!.value.aspectRatio *
+                            (cameraBloc
+                                    .state.cameraController!.value.aspectRatio *
                                 (constraints.maxWidth / constraints.maxHeight)),
                         alignment: Alignment.topCenter,
                         child: Column(
@@ -82,7 +83,6 @@ class _TestingPageCameraScreenState extends State<TestingPageCameraScreen> {
                           ],
                         ),
                       ),
-
                 if (state is CameraReadyState) ...[
                   /* for Start recording Button 👇*/
                   Align(
@@ -124,40 +124,39 @@ class _TestingPageCameraScreenState extends State<TestingPageCameraScreen> {
                     ),
                   ),
                 ],
-
                 if (state is RecordingInProgressState) ...[
                   /* for Stop recording Button 👇*/
                   Align(
                     alignment: Alignment.bottomCenter,
-                      child: Padding(
+                    child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: FittedBox(
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.red),
-                            elevation: MaterialStateProperty.all(5.0)),
-                        onPressed: () => context
-                            .read<TestingPageCameraBloc>()
-                            .add(RecordingStoppedEvent()),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Text(
-                              "Stop Recoding",
-                              style: TextStyle(
-                                fontSize: 16,
+                      child: FittedBox(
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all<Color>(Colors.red),
+                              elevation: MaterialStateProperty.all(5.0)),
+                          onPressed: () => context
+                              .read<TestingPageCameraBloc>()
+                              .add(RecordingStoppedEvent()),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Text(
+                                "Stop Recoding",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Icon(Icons.stop_circle_outlined)
-                          ],
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Icon(Icons.stop_circle_outlined)
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
                   ),
 
                   /* for recording inProgress Icon 👇 */

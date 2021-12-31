@@ -18,7 +18,6 @@ class NewRecordResponsePage extends StatefulWidget {
 
 class _NewRecordResponsePageState extends State<NewRecordResponsePage>
     with WidgetsBindingObserver {
-
   int totalQuestions = 5;
   String firstHalf = "";
   String secondHalf = "";
@@ -115,7 +114,8 @@ class _NewRecordResponsePageState extends State<NewRecordResponsePage>
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 20),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 20),
                     height: 300,
                     width: 400,
                     child: ResponsePageCameraScreen(),
@@ -124,7 +124,6 @@ class _NewRecordResponsePageState extends State<NewRecordResponsePage>
                     child: Container(
                       height: 200,
                       width: 400,
-
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: _questionPart(),
                     ),

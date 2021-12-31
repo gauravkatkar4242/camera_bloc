@@ -4,10 +4,13 @@ import 'package:bloc/bloc.dart';
 import 'package:bloc_1/record_response/timer.dart';
 import 'package:camera/camera.dart';
 import 'package:equatable/equatable.dart';
+
 part 'testing_page_camera_event.dart';
+
 part 'testing_page_camera_state.dart';
 
-class TestingPageCameraBloc extends Bloc<TestingPageCameraEvent, TestingPageCameraState> {
+class TestingPageCameraBloc
+    extends Bloc<TestingPageCameraEvent, TestingPageCameraState> {
   CameraController? _controller;
 
   final CountDownTimer _ticker = const CountDownTimer();
@@ -16,7 +19,7 @@ class TestingPageCameraBloc extends Bloc<TestingPageCameraEvent, TestingPageCame
 
   @override
   Future<void> close() {
-    if (_controller != null){
+    if (_controller != null) {
       _controller!.dispose();
     }
     _tickerSubscription?.cancel();
@@ -35,18 +38,19 @@ class TestingPageCameraBloc extends Bloc<TestingPageCameraEvent, TestingPageCame
     on<DisposeCameraEvent>(_disposeCamera);
   }
 
-  Future<void> _initCamera(InitializingControllerEvent event, Emitter<TestingPageCameraState> emit) async {
-
+  Future<void> _initCamera(InitializingControllerEvent event,
+      Emitter<TestingPageCameraState> emit) async {
     print("--- Event :- _initCamera :: Current State :- $state");
 
-    var cameraList = await availableCameras(); // gets all available cameras from device
+    var cameraList =
+        await availableCameras(); // gets all available cameras from device
 
     if (_controller != null) {
       await _controller!.dispose();
     }
     CameraDescription cameraDescription;
     if (cameraList.length == 1) {
-      cameraDescription = cameraList[0];// for desktop
+      cameraDescription = cameraList[0]; // for desktop
     } else {
       cameraDescription = cameraList[1]; // for mobile select front camera
     }
@@ -69,12 +73,14 @@ class TestingPageCameraBloc extends Bloc<TestingPageCameraEvent, TestingPageCame
     emit(CameraReadyState(_controller));
   }
 
-  void _notRecoding(CameraReadyEvent event, Emitter<TestingPageCameraState> emit) {
+  void _notRecoding(
+      CameraReadyEvent event, Emitter<TestingPageCameraState> emit) {
     print("--- Event :- _notRecoding :: CurrentState :- $state");
     emit(CameraReadyState(_controller));
   }
 
-  Future<void> _startedRecording(RecordingStartedEvent event, Emitter<TestingPageCameraState> emit) async {
+  Future<void> _startedRecording(
+      RecordingStartedEvent event, Emitter<TestingPageCameraState> emit) async {
     // _controller.startVideoRecording()
     print("--- Event :- _startedRecording :: CurrentState :- $state");
 
@@ -88,11 +94,11 @@ class TestingPageCameraBloc extends Bloc<TestingPageCameraEvent, TestingPageCame
     } on CameraException catch (e) {
       //will set state to CameraExceptionState state
       emit(CameraExceptionState(_controller));
-
     }
   }
 
-  void _onTimerStarted(TimerStartedEvent event, Emitter<TestingPageCameraState> emit) {
+  void _onTimerStarted(
+      TimerStartedEvent event, Emitter<TestingPageCameraState> emit) {
     emit(RecordingInProgressState(_controller, event.duration));
     _tickerSubscription?.cancel();
     _tickerSubscription = _ticker
@@ -102,17 +108,17 @@ class TestingPageCameraBloc extends Bloc<TestingPageCameraEvent, TestingPageCame
 
   void _onTicked(TimerTickedEvent event, Emitter<TestingPageCameraState> emit) {
     print("_onTicked ${event.duration}");
-     if (event.duration > 10) {
+    if (event.duration > 10) {
       add(RecordingStoppedEvent());
     } else {
       emit(RecordingInProgressState(_controller, event.duration));
     }
-
   }
 
-  Future<void> _getRecordedVideo(RecordingStoppedEvent event, Emitter<TestingPageCameraState> emit) async {
+  Future<void> _getRecordedVideo(
+      RecordingStoppedEvent event, Emitter<TestingPageCameraState> emit) async {
     XFile? file = await _stoppedRecording();
-    if (file == null){
+    if (file == null) {
       emit(CameraExceptionState(_controller));
       return;
     }
@@ -123,7 +129,7 @@ class TestingPageCameraBloc extends Bloc<TestingPageCameraEvent, TestingPageCame
     emit(CameraReadyState(_controller));
   }
 
-  Future<XFile?> _stoppedRecording() async{
+  Future<XFile?> _stoppedRecording() async {
     if (_controller == null || !_controller!.value.isRecordingVideo) {
       //will set state to CameraExceptionState state - Null video
       return null;
@@ -138,7 +144,8 @@ class TestingPageCameraBloc extends Bloc<TestingPageCameraEvent, TestingPageCame
     }
   }
 
-  Future<void> _disposeCamera(DisposeCameraEvent event, Emitter<TestingPageCameraState> emit) async {
+  Future<void> _disposeCamera(
+      DisposeCameraEvent event, Emitter<TestingPageCameraState> emit) async {
     emit(CameraDisposedState(null));
 
     if (_controller != null) {
@@ -148,5 +155,4 @@ class TestingPageCameraBloc extends Bloc<TestingPageCameraEvent, TestingPageCame
     }
     _tickerSubscription?.cancel();
   }
-
 }

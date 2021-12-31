@@ -82,35 +82,33 @@ class _RecordResponsePageState extends State<RecordResponsePage> {
   }
 
   Widget _web() {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Align(
-          alignment: Alignment.topCenter,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                // border: Border.all(color: Colors.black45)
-              ),
-              height: constraints.maxHeight * 0.85,
-              width: constraints.maxWidth * 0.65,
-              child: Column(
-                children: [
-                  SizedBox(
-                      height: constraints.maxHeight * 0.65,
-                      width: constraints.maxWidth * 0.65,
-                      child: ResponsePageCameraScreen()),
-                  SizedBox(
-                      height: constraints.maxHeight * 0.20,
-                      child: _questionPart()),
-                ],
-              ),
+    return LayoutBuilder(builder: (context, constraints) {
+      return Align(
+        alignment: Alignment.topCenter,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              // border: Border.all(color: Colors.black45)
+            ),
+            height: constraints.maxHeight * 0.85,
+            width: constraints.maxWidth * 0.65,
+            child: Column(
+              children: [
+                SizedBox(
+                    height: constraints.maxHeight * 0.65,
+                    width: constraints.maxWidth * 0.65,
+                    child: ResponsePageCameraScreen()),
+                SizedBox(
+                    height: constraints.maxHeight * 0.20,
+                    child: _questionPart()),
+              ],
             ),
           ),
-        );
-      }
-    );
+        ),
+      );
+    });
   }
 
   Widget _questionPart() {

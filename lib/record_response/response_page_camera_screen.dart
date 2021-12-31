@@ -16,8 +16,6 @@ class ResponsePageCameraScreen extends StatefulWidget
 
 class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
     with WidgetsBindingObserver {
-
-
   // @override
   @override
   Widget build(BuildContext context) {
@@ -58,7 +56,7 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
         } else {
           return LayoutBuilder(builder: (context, constraints) {
             int timer = context.select(
-                    (ResponsePageCameraBloc bloc) => bloc.state.timerDuration);
+                (ResponsePageCameraBloc bloc) => bloc.state.timerDuration);
             int min = (timer / 60).round();
             int sec = (timer % 60);
             return Stack(
@@ -71,19 +69,18 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
                             (constraints.maxWidth / constraints.maxHeight),
                         child:
                             // Expanded(child: CameraPreview(cameraBloc.state.cameraController!))
-                        CameraPreview(cameraBloc.state.cameraController!)
-                )
+                            CameraPreview(cameraBloc.state.cameraController!))
 
                     /* for camera screen mobile Button 👇*/
                     : Transform.scale(
                         scale: 1 /
-                            (cameraBloc.state.cameraController!.value.aspectRatio *
+                            (cameraBloc
+                                    .state.cameraController!.value.aspectRatio *
                                 (constraints.maxWidth / constraints.maxHeight)),
                         alignment: Alignment.topCenter,
-                        child: CameraPreview(
-                                cameraBloc.state.cameraController!),
+                        child:
+                            CameraPreview(cameraBloc.state.cameraController!),
                       ),
-
                 if (state is RecordingInProgressState) ...[
                   /* for Stop recording Button 👇*/
                   Align(
@@ -94,7 +91,7 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
                         child: ElevatedButton(
                           style: ButtonStyle(
                               backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.red),
+                                  MaterialStateProperty.all<Color>(Colors.red),
                               elevation: MaterialStateProperty.all(5.0)),
                           onPressed: () => context
                               .read<ResponsePageCameraBloc>()
@@ -140,7 +137,7 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
                               decoration: const BoxDecoration(
                                 color: Colors.black26,
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(4.0)),
+                                    BorderRadius.all(Radius.circular(4.0)),
                               ),
                               padding: const EdgeInsets.symmetric(
                                   vertical: 2, horizontal: 2),
@@ -165,64 +162,62 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
                     alignment: Alignment.topRight,
                     child: FittedBox(
                         child: Padding(
-                          padding: const EdgeInsets.only(right: 12, top: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Container(
-                                decoration: const BoxDecoration(
-                                  color: Colors.black26,
-                                  borderRadius:
+                      padding: const EdgeInsets.only(right: 12, top: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            decoration: const BoxDecoration(
+                              color: Colors.black26,
+                              borderRadius:
                                   BorderRadius.all(Radius.circular(4.0)),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 2, horizontal: 5),
-                                child: Text(
-                                  "${min.toString().padLeft(2, '0')} : ${sec.toString().padLeft(2, '0')}",
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 1.0,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        )),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 2, horizontal: 5),
+                            child: Text(
+                              "${min.toString().padLeft(2, '0')} : ${sec.toString().padLeft(2, '0')}",
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.0,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    )),
                   )
                 ],
-
-            if (state is TimerRunInProgressState) ...[
-              /* for Timer before Starting Rec👇 */
-              Align(
-                alignment: Alignment.center,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Recording Starts in ",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                      ),
+                if (state is TimerRunInProgressState) ...[
+                  /* for Timer before Starting Rec👇 */
+                  Align(
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Recording Starts in ",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          timer.abs().toString(),
+                          style: const TextStyle(
+                            fontSize: 75,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.0,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
-                      Text(
-                        timer.abs().toString(),
-                        style: const TextStyle(
-                          fontSize: 75,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.0,
-                          color: Colors.white,
-                        ),                      ),
-                    ],
-                ),
-              ),
-              ],
+                  ),
+                ],
 
-
-            /* for Timer before Starting Rec👇 */
-
-
+                /* for Timer before Starting Rec👇 */
               ],
             );
           });
