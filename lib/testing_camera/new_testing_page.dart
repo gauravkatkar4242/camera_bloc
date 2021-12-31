@@ -1,6 +1,5 @@
 import 'package:bloc_1/testing_camera/testing_page_camera_bloc.dart';
 import 'package:bloc_1/testing_camera/testing_page_camera_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,7 +32,9 @@ class _NewTestingPageState extends State<NewTestingPage> with WidgetsBindingObse
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: kIsWeb ? _web() : _mobile());
+    return Scaffold(
+      appBar: AppBar(title: Text("Testing Page"),),
+        body: kIsWeb ? _web() : _mobile());
   }
 
   Widget _web() {

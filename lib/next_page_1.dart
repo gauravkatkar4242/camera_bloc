@@ -1,5 +1,4 @@
-import 'package:bloc_1/record_response/record_response_page.dart';
-import 'package:bloc_1/testing_camera/testing_page.dart';
+import 'package:bloc_1/record_response/new_record_response_page.dart';
 import 'package:flutter/material.dart';
 
 class NextPage1 extends StatefulWidget {
@@ -29,10 +28,10 @@ class _NextPage1State extends State<NextPage1> {
             Text("Next Page 1"),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => RecordResponsePage(index: 1),
+                      builder: (context) => NewRecordResponsePage(index: 1),
                     ));
               },
               child: Text("Next Page"),

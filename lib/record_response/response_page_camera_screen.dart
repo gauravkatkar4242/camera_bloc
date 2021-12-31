@@ -16,25 +16,12 @@ class ResponsePageCameraScreen extends StatefulWidget
 
 class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
     with WidgetsBindingObserver {
-  var cameraBloc;
 
-  @override
-  void didChangeDependencies() {
-    cameraBloc = BlocProvider.of<ResponsePageCameraBloc>(context)
-      ..add(InitializingControllerEvent());
-    WidgetsBinding.instance!.addObserver(this);
-    super.didChangeDependencies();
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
-    super.dispose();
-  }
 
   // @override
   @override
   Widget build(BuildContext context) {
+    var cameraBloc = BlocProvider.of<ResponsePageCameraBloc>(context);
     return BlocConsumer<ResponsePageCameraBloc, ResponsePageCameraState>(
       builder: (context, state) {
         var timer = context
@@ -70,6 +57,10 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
           );
         } else {
           return LayoutBuilder(builder: (context, constraints) {
+            int timer = context.select(
+                    (ResponsePageCameraBloc bloc) => bloc.state.timerDuration);
+            int min = (timer / 60).round();
+            int sec = (timer % 60);
             return Stack(
               // alignment: Alignment.center,
               children: [
@@ -93,76 +84,50 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
                                 cameraBloc.state.cameraController!),
                       ),
 
-                /* for Start & Stop recording Button 👇*/
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: FittedBox(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          if (state is! RecordingInProgressState) ...[
-                            Container(
-                              height: 1,
-                              width: 1,
-                            ),
-                          ],
-                          if (state is RecordingInProgressState) ...[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElevatedButton(
-                                  style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                              Colors.red),
-                                      elevation:
-                                          MaterialStateProperty.all(5.0)),
-                                  onPressed: () => context
-                                      .read<ResponsePageCameraBloc>()
-                                      .add(RecordingStoppedEvent()),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
-                                      Text(
-                                        "Stop Recoding",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Icon(Icons.stop_circle_outlined)
-                                    ],
-                                  ),
+                if (state is RecordingInProgressState) ...[
+                  /* for Stop recording Button 👇*/
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: FittedBox(
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.red),
+                              elevation: MaterialStateProperty.all(5.0)),
+                          onPressed: () => context
+                              .read<ResponsePageCameraBloc>()
+                              .add(RecordingStoppedEvent()),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Text(
+                                "Stop Recoding",
+                                style: TextStyle(
+                                  fontSize: 16,
                                 ),
-                              ],
-                            ),
-                          ]
-                        ],
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Icon(Icons.stop_circle_outlined)
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
 
-                /* for recording inProgress Icon 👇 */
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 12.0, left: 8),
-                    child: FittedBox(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          if (state is! RecordingInProgressState) ...[
-                            Container(
-                              height: 1,
-                              width: 1,
-                            )
-                          ],
-                          if (state is RecordingInProgressState) ...[
+                  /* for recording inProgress Icon 👇 */
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 12.0, left: 8),
+                      child: FittedBox(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
                             const Icon(
                               Icons.circle,
                               color: Colors.red,
@@ -175,7 +140,7 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
                               decoration: const BoxDecoration(
                                 color: Colors.black26,
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(4.0)),
+                                BorderRadius.all(Radius.circular(4.0)),
                               ),
                               padding: const EdgeInsets.symmetric(
                                   vertical: 2, horizontal: 2),
@@ -183,45 +148,81 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
                                 "REC",
                                 style: TextStyle(
                                   fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.0,
+                                  color: Colors.white,
                                 ),
                               ),
                             )
-                          ]
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
 
-                /* for Timer before Starting Rec👇 */
-                Align(
-                  alignment: Alignment.center,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      if (state is TimerRunInProgressState) ...[
-                        Text(
-                          timer.abs().toString(),
-                          style: TextStyle(fontSize: 50),
-                        ),
-                      ]
+                  /* for timer 👇 */
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: FittedBox(
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 12, top: 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                decoration: const BoxDecoration(
+                                  color: Colors.black26,
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(4.0)),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 2, horizontal: 5),
+                                child: Text(
+                                  "${min.toString().padLeft(2, '0')} : ${sec.toString().padLeft(2, '0')}",
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        )),
+                  )
+                ],
+
+            if (state is TimerRunInProgressState) ...[
+              /* for Timer before Starting Rec👇 */
+              Align(
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Recording Starts in ",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                      Text(
+                        timer.abs().toString(),
+                        style: const TextStyle(
+                          fontSize: 75,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.0,
+                          color: Colors.white,
+                        ),                      ),
                     ],
-                  ),
                 ),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      if (state is RecordingInProgressState) ...[
-                        Text(
-                          timer.toString(),
-                          style: TextStyle(fontSize: 50),
-                        ),
-                      ]
-                    ],
-                  ),
-                )
+              ),
+              ],
+
+
+            /* for Timer before Starting Rec👇 */
+
+
               ],
             );
           });
@@ -235,8 +236,7 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
               MaterialPageRoute(
                 builder: (context) => const NextPage1(),
               ));
-          context.read<ResponsePageCameraBloc>().add(DisposeCameraEvent());
-          // b1.close();
+          // context.read<ResponsePageCameraBloc>().add(DisposeCameraEvent());
         }
       },
     );

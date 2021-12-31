@@ -75,7 +75,7 @@ class ResponsePageCameraBloc
 
   void _notRecoding(
       CameraReadyEvent event, Emitter<ResponsePageCameraState> emit) {
-    print("_notRecoding - STATE = $state");
+    print("--- CurrentEvent :- _notRecoding :: CurrentState :- $state");
     emit(CameraReadyState(_controller));
   }
 
@@ -98,7 +98,7 @@ class ResponsePageCameraBloc
     } else if (event.duration == 0) {
       add(RecordingStartedEvent());
       // emit(RecordingInProgressState(_controller));
-    } else if (event.duration > 10) {
+    } else if (event.duration > 1000) {
       add(RecordingStoppedEvent());
     } else {
       emit(RecordingInProgressState(_controller, event.duration));
@@ -108,7 +108,7 @@ class ResponsePageCameraBloc
   Future<void> _startedRecording(RecordingStartedEvent event,
       Emitter<ResponsePageCameraState> emit) async {
     // _controller.startVideoRecording()
-    print("_startedRecording - STATE = $state");
+    print("--- CurrentEvent :- _startedRecording :: CurrentState :- $state");
 
     if (_controller == null || _controller!.value.isRecordingVideo) {
       return;
@@ -144,9 +144,9 @@ class ResponsePageCameraBloc
     }
     try {
       XFile file = await _controller!.stopVideoRecording();
-      print(
-          "********************************************************${file.path}");
-      print("_stoppedRecording - STATE = $state");
+      // print("********************************************************${file.path}");
+      print("--- CurrentEvent :- _stoppedRecording :: CurrentState :- $state");
+      print("Video Recorded Successful");
       return file;
     } on CameraException catch (e) {
       //will set state to CameraExceptionState state
@@ -160,7 +160,8 @@ class ResponsePageCameraBloc
 
     if (_controller != null) {
       await _controller?.dispose();
-      print("Camera Disposed*****-*-------------***********------------0");
+      print("--- CurrentEvent :- _disposeCamera :: CurrentState :- $state");
+      print("Camera Disposed");
     }
     _tickerSubscription?.cancel();
   }
