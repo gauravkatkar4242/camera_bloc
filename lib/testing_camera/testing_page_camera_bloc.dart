@@ -37,7 +37,7 @@ class TestingPageCameraBloc extends Bloc<TestingPageCameraEvent, TestingPageCame
 
   Future<void> _initCamera(InitializingControllerEvent event, Emitter<TestingPageCameraState> emit) async {
 
-    print("_initCamera - STATE = $state");
+    print("--- Event :- _initCamera :: Current State :- $state");
 
     var cameraList = await availableCameras(); // gets all available cameras from device
 
@@ -70,13 +70,13 @@ class TestingPageCameraBloc extends Bloc<TestingPageCameraEvent, TestingPageCame
   }
 
   void _notRecoding(CameraReadyEvent event, Emitter<TestingPageCameraState> emit) {
-    print("_notRecoding - STATE = $state");
+    print("--- Event :- _notRecoding :: CurrentState :- $state");
     emit(CameraReadyState(_controller));
   }
 
   Future<void> _startedRecording(RecordingStartedEvent event, Emitter<TestingPageCameraState> emit) async {
     // _controller.startVideoRecording()
-    print("_startedRecording - STATE = $state");
+    print("--- Event :- _startedRecording :: CurrentState :- $state");
 
     if (_controller == null || _controller!.value.isRecordingVideo) {
       return;
@@ -92,8 +92,7 @@ class TestingPageCameraBloc extends Bloc<TestingPageCameraEvent, TestingPageCame
     }
   }
 
-  void _onTimerStarted(
-      TimerStartedEvent event, Emitter<TestingPageCameraState> emit) {
+  void _onTimerStarted(TimerStartedEvent event, Emitter<TestingPageCameraState> emit) {
     emit(RecordingInProgressState(_controller, event.duration));
     _tickerSubscription?.cancel();
     _tickerSubscription = _ticker
@@ -101,8 +100,7 @@ class TestingPageCameraBloc extends Bloc<TestingPageCameraEvent, TestingPageCame
         .listen((duration) => add(TimerTickedEvent(duration: duration)));
   }
 
-  void _onTicked(
-      TimerTickedEvent event, Emitter<TestingPageCameraState> emit) {
+  void _onTicked(TimerTickedEvent event, Emitter<TestingPageCameraState> emit) {
     print("_onTicked ${event.duration}");
      if (event.duration > 10) {
       add(RecordingStoppedEvent());
@@ -132,8 +130,7 @@ class TestingPageCameraBloc extends Bloc<TestingPageCameraEvent, TestingPageCame
     }
     try {
       XFile file = await _controller!.stopVideoRecording();
-      print("********************************************************${file.path}");
-      print("_stoppedRecording - STATE = $state");
+      print("--- Event :- _stoppedRecording :: CurrentState :- $state");
       return file;
     } on CameraException catch (e) {
       //will set state to CameraExceptionState state
@@ -146,7 +143,8 @@ class TestingPageCameraBloc extends Bloc<TestingPageCameraEvent, TestingPageCame
 
     if (_controller != null) {
       await _controller?.dispose();
-      print("Camera Disposed*****-*-------------***********------------0");
+      print("--- Event :- _disposeCamera :: CurrentState :- $state");
+      print("Camera Disposed");
     }
     _tickerSubscription?.cancel();
   }

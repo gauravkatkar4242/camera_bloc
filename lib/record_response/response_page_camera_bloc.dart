@@ -39,7 +39,7 @@ class ResponsePageCameraBloc
 
   Future<void> _initCamera(InitializingControllerEvent event,
       Emitter<ResponsePageCameraState> emit) async {
-    print("_initCamera - STATE = $state");
+    print("--- CurrentEvent :- _initCamera :: CurrentState :- $state");
 
     var cameraList =
         await availableCameras(); // gets all available cameras from device
@@ -132,7 +132,7 @@ class ResponsePageCameraBloc
     }
     emit(RecordingCompletedState(_controller));
     if (file != null) {
-      file.saveTo("abd.mp4");
+      // file.saveTo("abd.mp4");
     }
     emit(CameraReadyState(_controller));
   }

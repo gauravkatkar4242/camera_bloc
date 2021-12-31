@@ -2,6 +2,7 @@
 import 'package:bloc_1/next_page_1.dart';
 import 'package:bloc_1/record_response/record_response_page.dart';
 import 'package:bloc_1/record_response/response_page_camera_bloc.dart';
+import 'package:bloc_1/testing_camera/new_testing_page.dart';
 import 'package:bloc_1/testing_camera/testing_page.dart';
 import 'package:bloc_1/testing_camera/testing_page_camera_bloc.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       // home: const RecordResponsePage(index: 1),
-        home: TestingPage(),
+        home: NewTestingPage(),
       ),
     );
   }
