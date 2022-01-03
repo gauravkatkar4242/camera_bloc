@@ -40,37 +40,41 @@ class ResponsePageCameraBloc
   Future<void> _initCamera(InitializingControllerEvent event,
       Emitter<ResponsePageCameraState> emit) async {
     print("--- CurrentEvent :- _initCamera :: CurrentState :- $state");
-
-    var cameraList =
-        await availableCameras(); // gets all available cameras from device
-
-    if (_controller != null) {
-      await _controller!.dispose();
-    }
-    CameraDescription cameraDescription;
-    if (cameraList.length == 1) {
-      cameraDescription = cameraList[0]; // for desktop
-    } else {
-      cameraDescription = cameraList[1]; // for mobile select front camera
-    }
-
-    final CameraController cameraController = CameraController(
-      cameraDescription,
-      ResolutionPreset.medium,
-      enableAudio: true,
-    );
-    _controller = cameraController;
-
-    if (cameraController.value.hasError) {
-      emit(ControllerInitializationFailureState(null));
-    }
+    print("--- Event :- _initCamera :: Current State :- $state");
     try {
+      var cameraList =
+      await availableCameras(); // gets all available cameras from device
+
+      if (_controller != null) {
+        await _controller!.dispose();
+      }
+      CameraDescription cameraDescription;
+      if (cameraList.length == 1) {
+        cameraDescription = cameraList[0]; // for desktop
+      } else {
+        cameraDescription = cameraList[1]; // for mobile select front camera
+      }
+
+      final CameraController cameraController = CameraController(
+        cameraDescription,
+        ResolutionPreset.medium,
+        enableAudio: true,
+      );
+
+      _controller = cameraController;
+
+      if (cameraController.value.hasError) {
+        emit(ControllerInitializationFailureState(null));
+      }
+
       await cameraController.initialize();
+
+      emit(CameraReadyState(_controller));
+      add(const TimerStartedEvent(duration: -3));
+
     } on CameraException catch (e) {
       emit(ControllerInitializationFailureState(null));
     }
-    emit(CameraReadyState(_controller));
-    add(const TimerStartedEvent(duration: -3));
   }
 
   void _notRecoding(

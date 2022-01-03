@@ -11,8 +11,7 @@ class NewTestingPage extends StatefulWidget {
   _NewTestingPageState createState() => _NewTestingPageState();
 }
 
-class _NewTestingPageState extends State<NewTestingPage>
-    with WidgetsBindingObserver {
+class _NewTestingPageState extends State<NewTestingPage> with WidgetsBindingObserver {
   var cameraBloc;
 
   @override
@@ -44,7 +43,9 @@ class _NewTestingPageState extends State<NewTestingPage>
       var maxHeight = constraints.maxHeight;
       var maxWidth = constraints.maxWidth;
       if (maxHeight > 400 && maxWidth > 500) {
-        return SizedBox(
+        return Container(
+          alignment: Alignment.topCenter,
+          padding: EdgeInsets.symmetric(vertical: 20),
           height: maxHeight,
           width: maxWidth,
           child: Row(
@@ -52,7 +53,7 @@ class _NewTestingPageState extends State<NewTestingPage>
             children: [
               SizedBox(
                 height: maxHeight * 0.7,
-                width: maxWidth * 0.6,
+                width: maxWidth * 0.5,
                 child: TestingPageCameraScreen(),
               ),
               FittedBox(
