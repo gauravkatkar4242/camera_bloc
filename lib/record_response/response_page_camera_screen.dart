@@ -22,9 +22,7 @@ class _ResponsePageCameraScreenState extends State<ResponsePageCameraScreen>
     var cameraBloc = BlocProvider.of<ResponsePageCameraBloc>(context);
     return BlocConsumer<ResponsePageCameraBloc, ResponsePageCameraState>(
       builder: (context, state) {
-        var timer = context
-            .select((ResponsePageCameraBloc bloc) => bloc.state.timerDuration);
-        if (state is InitializationControllerState) {
+       if (state is InitializationControllerState) {
           return const Center(
             child: CircularProgressIndicator(),
           );

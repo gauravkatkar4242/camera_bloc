@@ -16,7 +16,7 @@ class _NewTestingPageState extends State<NewTestingPage> with WidgetsBindingObse
 
   @override
   void didChangeDependencies() {
-    cameraBloc = BlocProvider.of<TestingPageCameraBloc>(context);
+    cameraBloc = BlocProvider.of<TestingPageCameraBloc>(context) /*...cameraBloc.add(InitializingControllerEvent())*/;
     cameraBloc.add(InitializingControllerEvent());
     WidgetsBinding.instance!.addObserver(this);
     super.didChangeDependencies();
